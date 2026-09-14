@@ -1,0 +1,28 @@
+# POINT 프로젝트 전용 설정. 모델과 보안/승인 설정은 기존 환경을 따른다.
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 3
+
+[agents.ui_ux]
+description = "화면 구조와 사용자 경험을 설계하고 구현 가능성 검토를 요청한다."
+config_file = "agents/ui_ux.toml"
+
+[agents.developer]
+description = "승인된 범위의 기능과 코드를 구현하고 독립 검토에 제출한다."
+config_file = "agents/developer.toml"
+
+[agents.code_reviewer]
+description = "코드 구조, 유지보수성, 중복과 위험 요소를 독립 검토한다."
+config_file = "agents/code_reviewer.toml"
+
+[agents.debugger]
+description = "오류를 재현하고 원인을 분석하며 수정 후 재검증한다."
+config_file = "agents/debugger.toml"
+
+[agents.tester]
+description = "기능, 사용자 흐름, 회귀 동작을 독립 검증한다."
+config_file = "agents/tester.toml"
+
+[agents.release_store]
+description = "승인된 배포 단계에서 실제 앱에 근거한 스토어 자료를 준비한다."
+config_file = "agents/release_store.toml"
