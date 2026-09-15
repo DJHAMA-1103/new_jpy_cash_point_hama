@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "isDemo": true,
+  "apps": [
+    { "id": "demo_payment_a", "nameJa": "サンプル決済A", "kind": "payment", "launchUrl": null },
+    { "id": "demo_payment_b", "nameJa": "サンプル決済B", "kind": "payment", "launchUrl": null },
+    { "id": "demo_point_a", "nameJa": "サンプルポイントA", "kind": "point", "launchUrl": null },
+    { "id": "demo_point_b", "nameJa": "サンプルポイントB", "kind": "point", "launchUrl": null }
+  ],
+  "stores": [
+    { "id": "demo_supermarket", "nameJa": "サンプルスーパー", "category": "supermarket", "supportedAppIds": ["demo_payment_a", "demo_point_a"] },
+    { "id": "demo_drugstore", "nameJa": "サンプルドラッグストア", "category": "drugstore", "supportedAppIds": ["demo_payment_b", "demo_point_a", "demo_point_b"] },
+    { "id": "demo_convenience_store", "nameJa": "サンプルコンビニ", "category": "convenience_store", "supportedAppIds": ["demo_payment_a", "demo_payment_b", "demo_point_b"] }
+  ]
+}
