@@ -1,5 +1,32 @@
 # POINT 진행상황
 
+## 지도 등록 교체 검토 (2026-10-12 최신)
+
+- 최신 사용자 승인: 지도 사용 방향을 문서화하고 다음 코드 작성 시 참고하도록 저장. Geoapify를 우선 검증 후보로 기록하되 최종 서비스 채택은 미확정.
+- 총괄 기록·통합 소유. Orchestra ui 화면 명세 초안 완료, reviewer 정적 검토 완료. 앱 코드 변경 없음.
+- Geoapify/LocationIQ 데모와 Photon 3건 직접 검색; 정확 지점명 누락·오매칭 관측. 세부 결과는 docs/MAP_EVALUATION.md.
+- 재개 순서: [지도 사용 방향](docs/MAP_EVALUATION.md)의 최신 기준 → APP_FLOW 관련 절 → 수정 대상 파일만 확인. 좌표 입력 제거, 지도·검색 목록 등록, 월별 앱 실행·재등록을 요구하지 않는 흐름을 유지한다.
+- 상태: 방향 기록 저장 / 서비스 검증 및 지도 화면 구현 대기. iPhone 검증 미실행. Google보다 검색 정확도가 낮다고 확정하지 않으며 Google 좌표 장기 보관 문제도 해결 완료로 기록하지 않는다.
+
+## Flutter + Swift 구현 (2026-10-12)
+
+- 승인: 클라우드 Mac에서 Swift 포함 빌드 가능한 조건으로 Flutter 선택, 최종 구현 계획에 사용자 "Implement the plan.".
+- 상태: 1차 코드 작성 및 Windows 검사 완료 / macOS·iPhone 검증 대기. 코드 apps/mobile, 계약 docs/MOBILE_CONTRACT.md, 검증 docs/MOBILE_REVIEW.md.
+- 소유권: Orchestra ui = apps/mobile/lib, test, assets, pubspec.yaml/lock; developer = apps/mobile/ios 및 README.md; reviewer = 읽기 전용 검토·테스트. 루트 = 기본 생성·기록·계약 및 인계 후 통합 수정.
+- 1차 범위: Flutter 관리/권한 UI, 무료 장소2·앱3, 저장, Swift 위치감지·로컬알림·우리 앱 경유 실행. 실제 지도검색·과금·배포 및 여러 앱 알림 방식은 후속.
+- macOS/iPhone 실행 검증 전까지 네이티브 검증 완료로 보고하지 않는다.
+- 결과: Flutter 관리·권한 안내·무료한도·저장, Swift 감시·로컬 알림·우리 앱 경유 실행 구현. Flutter 분석 이상 없음, 17개 검사 통과, 웹 빌드/실제 첫 화면 확인. Vポイント 공식 링크만 연결, 나머지 카탈로그 실행은 미지원.
+- 역할 상태: ui 초안 수령 및 루트 통합 완료, developer Swift 초안/Flutter 독립 검토 완료, reviewer 최종 저장 경합 수정까지 소스 수준 검토 승인. 최신 수정 후 루트가 Flutter 분석·17개 테스트·웹 빌드 재통과 확인. 기기 테스트 미실행.
+- 작업자 shell 실행 오류로 코드 원문을 Orchestra 결과로 수령하고 루트가 승인 경로에 저장했다. UI 결과 f92d9677719b430b9adec66a29b71e70는 메시지 길이 제한으로 실패 처리됐으나 result.json 원문을 보존·회수했다. native 초안 18d23557e22d4c93ac0a4e6fef73da3b 수령. 두 작성 작업 종료 후 apps/mobile 통합 수정 소유권을 루트로 인계한다. 독립 검토는 reviewer.
+
+## 앱 흐름 저장 (2026-10-12)
+
+- 사용자 승인: 앱 흐름을 Markdown으로 저장하고 향후 코드 작성 전 필수 참조로 지정하는 계획에 "Implement the plan.".
+- 기준: docs/APP_FLOW.md. 첫 사용 권한 선택 → 직접 장소·앱 등록 → 도착 알림 → 알림 터치 → 우리 앱 경유 → 등록 앱 실행. 설치 앱 전체 조회 금지.
+- 현재 HTML 시안만 완료. 실제 위치·알림·외부 앱 실행은 미구현. Swift/Flutter 및 여러 앱 연결 시 대상 선택 등은 미결정.
+- 담당/소유권: 루트가 docs/APP_FLOW.md, AGENTS.md, PROJECT_STATUS.md, DECISIONS.md 및 Orchestra 인계 갱신. reviewer는 읽기 전용 독립 문서 검토.
+- 상태: 완료. Orchestra reviewer ead942c0ed2c4cdeb8d65829dc1038ef가 저장 문서 원문의 요구사항 일치·미구현/미결정 구분을 독립 정적 검토 승인. 앱 코드·디자인 변경 없음. 런타임 테스트 대상 아님.
+
 ## Orchestra 적용 (2026-10-10)
 
 - 승인: Orchestra 기본 경로 적용 계획에 사용자 "Implement the plan.".
