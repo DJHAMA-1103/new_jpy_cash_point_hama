@@ -1,5 +1,27 @@
 # POINT 진행상황
 
+## Orchestra 적용 (2026-10-10)
+
+- 승인: Orchestra 기본 경로 적용 계획에 사용자 "Implement the plan.".
+- 담당: 루트가 AGENTS.md·상태·결정 및 engine.py 문맥 안내/메시지 경계 보존, tests/test_engine.py 회귀 검증 담당. 독립 검토는 Orchestra reviewer에 배정.
+- 재개: 최신 인계 → 관련 변경 파일 → 필요한 기록 절 순서. 내장 에이전트 중복 실행 금지.
+- 상태: 완료(2026-10-11). 기존 HTML 시안 완료 상태 유지. 로컬 서버 http://127.0.0.1:8765, 현재 읽기 전용 검토 모드.
+- 검증: 네 역할 인계 저장, 실제 reviewer 작업·총괄 보고 수신, 재시작 후 기존 인계 전달 확인. 기존 36개 및 문맥 잘림 회귀 추가 후 37개 테스트 통과.
+- 독립 검토: 919eb284b25f40d1b9570495466638d6에서 긴 이력 JSON 절단 문제 발견·수정. c296bc3c7c104adc8ea7c5614d2d1274는 시간 초과로 실패 처리. 수정 원문만 전달한 d3bdfd4bd85745bb9204bcb0043b580e 정적 재검토 승인(검토자 테스트 미실행).
+- 한계: 최근 12개 메시지 안의 최신 HANDOFF- 보고를 보존하며 전체 세션 기억은 아니다. 새 작업 인계는 짧게 갱신한다. 향후 승인된 UI/개발 파일 수정 배정 시 진행 중 작업이 없는지 확인하고 기존 -WorkspaceWrite 모드로 실행한다.
+
+## 홈 디자인 구현 (2026-10-10)
+
+- 사용자 승인: 홈 디자인 제작·기능 및 총괄 검토 계획에 "Implement the plan." 지시.
+- 목적: 최초 등록과 추가·수정용 관리 화면. 사용자가 장소와 앱을 직접 연결하며 평소에는 도착 알림을 이용한다.
+- 디자인: 검정·흰색·노랑 유지(민트·녹색 제외), 상단 지도, 하단 고정 등록 장소/＋등록/내 앱 메뉴. 일본어·iPhone 기준.
+- UI/UX design_recovery 소유권: docs/design/point-home/index.html, style.css, app.js. 상태: 완료(HTML 시안 범위).
+- 총괄 소유권: PROJECT_STATUS.md, DECISIONS.md, docs/design/point-home/REVIEW.md.
+- 검토: home_feasibility 읽기 전용 코드·기능 검토, overall_coordinator 실제 클릭·사용성 테스트와 app-home.png 갱신 담당. 루트 통합 확인.
+- 최신 승인: 사용자가 기존 디자인 유지, 하단 메뉴 추가 및 클릭·화면 전환 구현을 지시하고 실행 모드에서 "진행해." 승인. 영상 분석은 중단. 상태: 완료(HTML 시안 범위).
+- 검증 근거: 독립 코드 검토 및 Chrome 실제 클릭 CRUD·탭·설정·저장유지 확인. 토스트 겹침 수정 후 bottom=98px 확인, 자체검사 7개 통과. 상세는 docs/design/point-home/REVIEW.md. 실제 iPhone·네이티브 연동은 미검증.
+- HTML 시안만 구현하며 Flutter/Swift 확정, 실제 위치·알림·외부 앱 연동, 배포는 포함하지 않는다.
+
 - 갱신일: 2026-09-16 (Asia/Tokyo)
 - 현재 단계: iPhone·일본어 MVP 단계 1 기반 자료 작성·독립 검증 완료 / 실행 UI 구현 준비
 - 앱 개발: 착수 승인됨. 제품 흐름·기술 검토 완료, 스택·UI 방향 확인 후 첫 구현 진행
@@ -97,3 +119,27 @@
 - 새 디자인 전용 터미널을 열고 UI/UX 역할 지침을 적용한 Codex 실행을 확인한 이력이 있다. 사용자는 별도 디자인이 진행 중이라고 알렸으며, 해당 터미널의 현재 대화·미저장 산출물은 총괄이 확인하지 않았다. 이번 프로젝트 파일 목록에는 디자인 화면 파일이 없다.
 - 현재 팀의 개발·테스트 에이전트는 이전 배정 완료 상태이다. 별도 터미널은 독립 세션이므로 이 팀의 자동 메시지·상태 수집 대상으로 간주하지 않는다.
 - 진행상황 시각화와 재개에 필요한 승인·검증·남은 작업은 docs/HANDOFF.md에 저장한다.
+## 에이전트 작업실 구현 (2026-09-17)
+
+- 사용자 승인: 총괄·UI·개발·리뷰/테스트의 직접 메시지, 독립 터미널 및 실제 상태 대시보드 구현.
+- 범위: 로컬 Python 표준 라이브러리 서버 + 기존 Codex CLI 실행 + 브라우저 대시보드. POINT 앱 스택/UI 결정과 별개인 개발 지원 도구이다.
+- 총괄: tools/orchestra/terminal.py, tools/orchestra/start.ps1, tools/orchestra/stop.ps1, tools/orchestra/README.md, .gitignore, 운영 기록. 통합 및 실사용 검증 담당.
+- orchestra_backend(개발): tools/orchestra/server.py, tools/orchestra/engine.py, tools/orchestra/protocol.md. 메시지 저장·큐·Codex 실행·HTTP API 담당. 리뷰/테스트 에이전트가 독립 검토한다.
+- orchestra_ui(UI/UX): tools/orchestra/web/ 전용. 실제 API 상태 표시·메시지 입력·캐릭터 작업실. 개발 구현 가능성 및 리뷰/테스트 사용성 검토.
+- orchestra_quality(리뷰/테스트): tools/orchestra/tests/ 전용. 독립 테스트·코드 리뷰·디버그 검증. 운영 기록 직접 수정 금지.
+- 런타임 로그·메시지 DB·인증 토큰은 .orchestra/에 저장하고 Git에서 제외한다. 실행 권한 우회 옵션 및 신규 서비스/Skill 도입은 포함하지 않는다.
+
+## 오케스트라 중단 (2026-09-17)
+
+- 사용자 지시로 오케스트라 추가 구현·검증을 중단한다. 토큰 소비를 줄이고 이후 POINT 앱 형태·기능 개발을 우선한다.
+- 작성 파일과 로컬 실행 기록은 보존한다. 오케스트라를 완성·안정화 완료로 판단하지 않는다.
+- 실제 메시지 인계·병렬 응답·브라우저 동작 일부는 확인했으나, 파일 쓰기 검증은 실패했다. 이후 outcome 상태 구분 및 자동 승인 검토 연결 수정은 최종 통합 검증 전에 중단됐다.
+- 추가 에이전트 실행, 환경 조사, 앱 개발은 이번 중단 처리에서 시작하지 않는다.
+
+## 개발 도구 설치 (2026-09-23)
+
+- 사용자 승인: Ponytail, Graphify, Headroom 설치 계획에 Implement the plan. 지시. 추가 유료 API/서비스 없이 로컬 기능 위주로 구성.
+- 상태: 진행 중. 기본 샌드박스 명령은 setup refresh 오류; 승인된 외부 실행은 정상. 샌드박스 정책 자체는 변경하지 않는다.
+- 총괄 소유권: PROJECT_STATUS.md, DECISIONS.md. 기존 미커밋 변경 및 중단된 tools/orchestra 작업을 보존한다.
+- tools_installer(개발) 소유권: 세 도구의 사용자별 설치 디렉터리, 관련 Codex 플러그인/MCP 설정, .agents/skills/graphify/, docs/DEVELOPMENT_TOOLS.md, 필요한 백업. 기존 AGENTS.md와 앱 자료는 변경하지 않는다.
+- 검토: 코드 리뷰 → 디버그 → 테스트 → 총괄. 검증 전 설치 완료로 판단하지 않는다.

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080808">
+  <title>POINT</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <svg class="symbol-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.3"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M5 17h14l-2-3V9a5 5 0 0 0-10 0v5l-2 3Zm5 3h4"/></symbol>
+    <symbol id="i-locate" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="m9 3-.5 3-2.6 1-2.5-.8-2 3.5 2.2 2v2.7l-2.2 2 2 3.4 2.6-.9 2.5 1L9 23h4l.5-3 2.5-1 2.6.9 2-3.4-2.2-2v-2.7l2.2-2-2-3.5-2.5.9-2.6-1L13 3Z" transform="translate(1 -1) scale(.92)"/><circle cx="12" cy="11" r="3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="M4 10v10h16V10M3 10l2-6h14l2 6c-1 3-3 3-5 0-2 3-4 3-6 0-2 3-4 3-7 0ZM9 20v-6h6v6"/></symbol>
+    <symbol id="i-coffee" viewBox="0 0 24 24"><path d="M4 8h12v7a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8Zm12 1h2a3 3 0 0 1 0 6h-2M7 3v2m5-2v2"/></symbol>
+    <symbol id="i-cross" viewBox="0 0 24 24"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6Z"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+  </defs></svg>
+
+  <main class="showcase">
+    <section class="device-stage" aria-label="POINT ホーム">
+      <div class="phone" id="phone">
+        <div class="status-bar" aria-hidden="true"><b>9:41</b><span class="island"></span><span class="status-icons">▂▄▆ <span>◒</span><i></i></span></div>
+        <div class="app-header"><div><span class="app-wordmark">POINT<span>●</span></span><span class="sample-label">サンプル</span></div><button class="icon-button" id="settings" aria-label="設定"><svg><use href="#i-settings"/></svg></button></div>
+        <section class="map-area" aria-label="吉祥寺周辺のサンプル地図">
+          <svg class="map-art" viewBox="0 0 390 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <rect width="390" height="300" fill="#171717"/>
+            <g fill="#262626" stroke="#333333" stroke-width="1"><path d="M-10 5h76v55H-10Zm93 0h71v55H83Zm95 0h48v53h-48Zm66 0h54v52h-54Zm70 0h87v52h-87ZM-5 78h56v62H-5Zm72 0h90v62H67Zm109 0h50v62h-50Zm68 0h54v61h-54Zm70 0h85v61h-85ZM-5 155h68v64H-5Zm83 0h78v46H78Zm97 0h52v65h-52Zm70 0h53v54h-53Zm69 0h83v67h-83ZM-10 242h59v68h-59Zm75-10h92v75H65Zm112 10h48v63h-48Zm66-15h55v78h-55Zm72 14h87v70h-87Z"/></g>
+            <g stroke="#454545" fill="none" stroke-width="9"><path d="M-10 68h420M-10 147h420M-10 231h420M165-10v320M235-10v320M306-10v320"/><path d="M-15 270 405 195" stroke-width="15"/><path d="M-5 255 400 183" stroke="#777777" stroke-width="1.5"/></g>
+            <path d="M275 235q35-12 60 6t65 1v60H255Z" fill="#292929"/><path d="m290 262 90 15" stroke="#484848" stroke-width="3"/><g fill="#535353" opacity=".5"><circle cx="286" cy="277" r="12"/><circle cx="347" cy="247" r="14"/><circle cx="372" cy="286" r="19"/></g>
+            <g fill="#999999" font-size="11" font-family="sans-serif" letter-spacing="1"><text x="18" y="56">吉祥寺本町</text><text x="249" y="128">東町</text><text x="309" y="284">井の頭通り</text><text x="108" y="181" transform="rotate(-10 108 181)">中央通り</text></g>
+            <g transform="translate(105 218) rotate(-10)"><rect width="135" height="23" rx="5" fill="#3b3b3b"/><text x="67" y="15" text-anchor="middle" fill="#ffffff" font-size="12" font-family="sans-serif" letter-spacing="2">JR 吉祥寺駅</text></g>
+          </svg>
+          <button class="map-search" id="search"><svg><use href="#i-search"/></svg><span>場所を検索して追加</span><kbd>＋</kbd></button>
+          <div id="map-pins"></div>
+          <div class="you-dot" id="you-dot" aria-label="サンプルの現在地"><span></span></div>
+          <button class="locate-button" id="locate" aria-label="現在地のサンプル表示"><svg><use href="#i-locate"/></svg></button>
+          <span class="map-caption">吉祥寺</span>
+        </section>
+        <section class="management-sheet" aria-label="場所とアプリの管理">
+          <div class="sheet-title"><h2 id="section-title">登録した場所</h2></div>
+          <div class="management-hint" id="management-hint"><svg><use href="#i-bell"/></svg><span>場所ごとに、知らせてほしいアプリを登録。</span></div>
+          <div id="list-panel" class="list-panel" role="tabpanel" aria-labelledby="places-tab" tabindex="0"></div>
+        </section>
+        <nav class="bottom-nav" aria-label="メインメニュー">
+          <div class="bottom-tabs" role="tablist" aria-label="管理する項目">
+            <button role="tab" id="places-tab" aria-controls="list-panel" aria-selected="true" data-tab="places"><svg aria-hidden="true"><use href="#i-pin"/></svg><span>登録場所 <span class="nav-count" id="place-count">3</span></span></button>
+            <button role="tab" id="apps-tab" aria-controls="list-panel" aria-selected="false" tabindex="-1" data-tab="apps"><svg aria-hidden="true"><use href="#i-grid"/></svg><span>マイアプリ <span class="nav-count" id="app-count">4</span></span></button>
+          </div>
+          <button class="register-button" id="add" aria-label="場所を登録"><svg aria-hidden="true"><use href="#i-plus"/></svg><span>登録</span></button>
+        </nav>
+        <div class="home-indicator" aria-hidden="true"></div>
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+  <dialog id="dialog" aria-labelledby="dialog-title"><div class="dialog-top"><span class="dialog-brand">point<span>●</span></span><button class="icon-button" id="close-dialog" aria-label="閉じる"><svg><use href="#i-close"/></svg></button></div><div id="dialog-content"></div></dialog>
+</body>
+</html>
