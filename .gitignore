@@ -1,3 +1,5 @@
 .orchestra/
 __pycache__/
 *.py[cod]
+
+/apps/mobile/config/geoapify.local.json

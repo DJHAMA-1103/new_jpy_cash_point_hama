@@ -1,5 +1,11 @@
 # POINT 결정 기록
 
+## GitHub commit and push authorization (2026-10-17)
+
+- User confirmed registration and explicitly authorized commit and push of all current modifications/additions to the existing GitHub repository.
+- Excludes the local API key, ignored build output and local runtime artifacts. This authorization does not include deployment or paid services.
+
+
 ## D-021 Flutter + Swift 구현 승인 (2026-10-12)
 
 - 근거: 사용자 "swift로 연결할경우 클라우드mac으로 빌드가 가능하다면 2번으로 진행해" 및 최종 구현 계획 "Implement the plan.".
@@ -109,3 +115,7 @@
 - D-022 (2026-10-12): 사용자는 좌표 입력 UI를 거부하고 지도 → 매장 검색 목록 → 지점 선택 → 앱 연결 → 등록 흐름으로 교체하는 계획을 승인했다. 이후 OSM 검토를 지시했다. 지도 제공자는 아직 선정하지 않았으며 OSM 공용 서버 운영 채택·신규 계정·계약 승인이 아니다. 검토 근거 docs/MAP_EVALUATION.md.
 
 - D-023 (2026-10-12): 사용자가 지도 사용 방향 저장 계획에 "Implement the plan."으로 승인. docs/MAP_EVALUATION.md 최신 기준을 APP_FLOW·PROJECT_STATUS에 연결해 다음 지도 구현 전 필수 참조로 지정. Geoapify는 우선 검증 후보이며 최종 채택 아님. 지도 검색 목록 등록·좌표 입력 제거·수동 핀 보완·월별 재등록 불요 원칙 보존. Google 장기 보관 해결 및 Google 대비 검색 품질은 미확정. 앱 코드 변경 없음.
+
+- D-024 (2026-10-16): User chose Geoapify for the first map/search integration, created an account and retained an API key, then explicitly requested execution. Implement free-plan map display, store/address search, manual pin fallback and local coordinate persistence. Root prepares ignored local key file; Orchestra implements and independently reviews. Paid upgrades, store deployment and claims of verified iPhone arrival remain excluded.
+
+- D-025 (2026-10-16): User explicitly delegated implementation, design alignment, verification coordination and final in-scope approval to the root coordinator after independent agent review. Use Orchestra specialists actively; do not repeatedly request product approval for this scope. Protect API key; no paid upgrades, deployment or public push inferred.

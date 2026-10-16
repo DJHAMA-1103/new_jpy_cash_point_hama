@@ -62,3 +62,16 @@ dialog .preview-controls{display:flex;gap:6px;flex-wrap:wrap;margin-top:15px}dia
 .home-indicator{background:#111;height:max(22px,env(safe-area-inset-bottom));min-height:max(22px,env(safe-area-inset-bottom))}
 .phone .toast{bottom:calc(98px + env(safe-area-inset-bottom))}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+
+/* Registration states and accessible pin confirmation. */
+dialog select{width:100%;min-height:48px;background:#242424;color:#fff;border:1px solid #777;border-radius:10px;font:inherit;padding:10px}
+dialog summary{min-height:44px;padding:12px 0;cursor:pointer;color:#ffd447}
+#search-form .secondary{margin-top:8px}
+button:disabled{opacity:.5;cursor:not-allowed}
+dialog .choice>span:nth-child(2){min-width:0;overflow-wrap:anywhere}
+dialog .dialog-actions{flex-wrap:wrap}dialog .dialog-actions>*{flex:1 1 125px}
+dialog .description,dialog .dialog-note,dialog .choice small{font-size:14px}
+dialog input[type=text],dialog input[type=search]{font-size:16px}
+:focus-visible{outline:3px solid #ffd447;outline-offset:3px}
+#close-dialog,.locate-button{min-width:44px;min-height:44px}
+@media(max-height:640px){.phone{min-height:100svh}.map-area{min-height:135px;height:24svh}}

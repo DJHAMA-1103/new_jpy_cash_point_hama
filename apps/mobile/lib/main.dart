@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'models.dart';
 import 'native_bridge.dart';
@@ -14,7 +15,13 @@ void main() {
 class PointApp extends StatelessWidget {
   final PointRepository? repository;
   final NativeBridge? native;
-  const PointApp({super.key, this.repository, this.native});
+  final PlaceEditor Function(PlaceEditor)? placeEditorBuilder;
+  const PointApp({
+    super.key,
+    this.repository,
+    this.native,
+    this.placeEditorBuilder,
+  });
   @override
   Widget build(BuildContext context) => MaterialApp(
     locale: const Locale('ja'),
@@ -50,6 +57,7 @@ class PointApp extends StatelessWidget {
     home: PointHome(
       repository: repository ?? PointRepository(PreferencesStore()),
       native: native ?? NativeBridge(),
+      placeEditorBuilder: placeEditorBuilder,
     ),
   );
 }
@@ -57,7 +65,13 @@ class PointApp extends StatelessWidget {
 class PointHome extends StatefulWidget {
   final PointRepository repository;
   final NativeBridge native;
-  const PointHome({super.key, required this.repository, required this.native});
+  final PlaceEditor Function(PlaceEditor)? placeEditorBuilder;
+  const PointHome({
+    super.key,
+    required this.repository,
+    required this.native,
+    this.placeEditorBuilder,
+  });
   @override
   State<PointHome> createState() => _PointHomeState();
 }
@@ -220,12 +234,15 @@ class _PointHomeState extends State<PointHome> with WidgetsBindingObserver {
     final result = await Navigator.push<Place>(
       context,
       MaterialPageRoute(
-        builder: (_) => PlaceEditor(
-          initial: place,
-          apps: _data.apps,
-          native: widget.native,
-          existingIds: _data.places.map((p) => p.id).toSet(),
-        ),
+        builder: (_) {
+          final editor = PlaceEditor(
+            initial: place,
+            apps: _data.apps,
+            native: widget.native,
+            existingIds: _data.places.map((p) => p.id).toSet(),
+          );
+          return widget.placeEditorBuilder?.call(editor) ?? editor;
+        },
       ),
     );
     if (result != null && mounted) {
@@ -397,36 +414,23 @@ class _PointHomeState extends State<PointHome> with WidgetsBindingObserver {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              '位置の模式表示・実際の地図ではありません',
-              style: TextStyle(color: Colors.white70),
-            ),
-            const SizedBox(height: 16),
-            if (_data.places.isEmpty)
-              const Padding(
-                padding: EdgeInsets.all(16),
-                child: Icon(
-                  Icons.location_on_outlined,
-                  color: Color(0xFFFFD83D),
-                  size: 48,
-                ),
+            const SizedBox(height: 12),
+            PlaceMap(
+              key: ValueKey(
+                _data.places
+                    .map((p) => '${p.id}:${p.latitude}:${p.longitude}')
+                    .join('|'),
               ),
-            for (final p in _data.places)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Row(
-                  children: [
-                    const Icon(Icons.place, color: Color(0xFFFFD83D)),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        p.name,
-                        style: const TextStyle(color: Colors.white),
-                      ),
+              center: _data.places.isEmpty
+                  ? const LatLng(35.6812, 139.7671)
+                  : LatLng(
+                      _data.places.first.latitude,
+                      _data.places.first.longitude,
                     ),
-                  ],
-                ),
-              ),
+              pins: [
+                for (final p in _data.places) LatLng(p.latitude, p.longitude),
+              ],
+            ),
             FilledButton.icon(
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFFFFD83D),
@@ -434,7 +438,7 @@ class _PointHomeState extends State<PointHome> with WidgetsBindingObserver {
               ),
               onPressed: _busy ? null : () => _edit(),
               icon: const Icon(Icons.add_location_alt_outlined),
-              label: const Text('場所を追加・現在地を登録'),
+              label: const Text('地図で場所を追加'),
             ),
           ],
         ),

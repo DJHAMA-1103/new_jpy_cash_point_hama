@@ -1,5 +1,58 @@
 # POINT 진행상황
 
+## User registration check and GitHub sync (2026-10-17)
+
+- User personally confirmed registration works and explicitly requested committing and pushing all current changes to GitHub.
+- Scope: reviewed Geoapify integration, tests, design prototype and documentation. Local credentials, generated builds and Orchestra runtime files remain ignored.
+- Pre-commit exact-key scan passed for tracked/nonignored files; existing final verification remains 50 tests, clean analysis and successful web build. No application code changed for this sync.
+- iPhone arrival/background notifications remain unverified.
+
+
+## Geoapify integration accepted for web trial (2026-10-16 FINAL)
+
+- Coordinator acceptance under D-025: specialist implementation, independent source reviews and actual browser evidence combined. This accepts web map/search/registration and prototype alignment, not iPhone arrival or deployment.
+- Real service: ignored local JSON syntax repaired without printing/changing the key; geocoding and PNG tile both HTTP200. Shinjuku3-17-3 search returned Matsumotokiyoshi at35.6917065,139.7033723 plus other candidates; user confirms result/pin.
+- Final mobile author checks: analyze clean,50 tests pass, keyed web build success. Root independently executed earlier49 tests/analyze/build before the final semantics fix; do not mislabel final50 as root rerun.
+- Actual isolated Chrome: address search, selected place, Vpoint save/reload. Found and fixed positionless semantic map click saving northwest corner. ExcludeSemantics on map plus explicit camera-center selection preserves physical pointer onTap. Postfix browser center save/reload exactly35.6917065,139.7033723; +30px physical tap saved longitude139.70465976032716 matching projection. ID/name/radius150/Vpoint retained.
+- Evidence: developer task8e834bf71dd046d5b272c5ef43fa669c progress/tool history contains actual postfix execution; final report98eb33865c5f40a3b4c45193e29f6207 recovered handoff after600s timeout. Existing .orchestra/runtime-browser-report.md is PRE-FIX evidence, not final success evidence.
+- Independent final mobile static review653c0265544840369781c00c3820ebbb: scoped code acceptance, no blocking defect. Reviewer did not execute Flutter/browser. Earlier read-only execution restrictions are environment failures, not failed app tests.
+- Design: prototype search/pin/apps/save and explicit demo/error states updated. UI fixed retained manual draft and consistent pin transform;320x568/390x844 Chrome back/reentry, keyboard Enter/Space, storage failure/retry, reload/edit/delete/unlink checks passed. HTML final static reviewdf1c9e3e8ea049098ed6b0a023578f21 accepted. Prototype policies differ from Flutter as documented in design REVIEW.md.
+- Credential check: no real key found in tracked or nonignored files. Local key JSON and build/web/main.dart.js git-ignored. No commit, push, paid upgrade or deployment performed. Local preview http://127.0.0.1:8793 only; built client key is not a server-side secret.
+- Remaining: macOS/iPhone build and real arrival/background/notification/launch, VoiceOver and full device accessibility, broader Japanese search quality/usage measurement. Do not claim these passed.
+- Ownership returned to root; no active implementation assignment. User-facing result delivered by root. Resume latest handoff/current sections only.
+
+
+## Parallel validation and design implementation (2026-10-16 CURRENT)
+
+- User explicitly requested Orchestra specialist execution, parallel verification and design alignment; root coordinates/reports only except credential handling and integration records.
+- Root owns records and ignored local credential JSON. JSON format repaired preserving unique existing key; Git ignored/untracked confirmed. Real geocode and raster tile requests both HTTP200. Address returned Shinjuku Matsumotokiyoshi candidate and other candidates; user pin confirmation remains required.
+- UI owns docs/design/point-home/index.html, style.css, app.js, REVIEW.md and visual artifacts after read-only analysis ends. Implement current map/search registration design without credentials or invented live API claims.
+- Developer owns apps/mobile/lib and tests for concrete reviewer findings after runtime verification ends; no design prototype edits. Normal caches/build generated files allowed.
+- Reviewer read-only independent final code/debug/test verification after author handoff. No overlapping writers. No paid subscription/deployment/push.
+
+
+## Geoapify trial integration result (2026-10-16)
+
+- Implemented: real Geoapify raster map on overview/editor, explicit Japanese store/address search (Japan filter and nearby bias), name/address results, manual pin selection, app selection and existing atomic local save. New radius 150m; existing ID/radius retained. No monthly coordinate refresh.
+- Config: apps/mobile/config/geoapify.local.json exists, blank and git-ignored. User must paste the key locally; no key was printed or committed. Example file is tracked. README includes --dart-define-from-file run/build commands.
+- Verified: developer final flutter analyze clean and full 47 tests passed (including 6 tile lifecycle tests). Root reran earlier 41 tests successfully and final web build passed after tile changes (60.8s). git diff --check passed.
+- Independent reviewer 5d29bb346e1440d0ad68d7e17a179904 approved static code scope after fixing duplicate submits, safe 403/429 guidance, legacy registration test, 304/cache, normal aborts, late retry errors and body/image decode errors. Reviewer did not independently execute tests.
+- Remaining: user key entry, real Geoapify search/map/usage check, macOS/iPhone build and arrival notifications, device accessibility. No paid subscription, deployment or Git commit performed.
+- Ownership: ui/developer returned edited files to root; reviewer read-only. Code ready for live-key verification, not live-service/iPhone completion.
+
+
+## Geoapify integration ownership (2026-10-16, CURRENT)
+
+- D-024: User authorized free-plan implementation. This overrides previous root integration ownership for the following files until workers hand back.
+- Root: .gitignore, apps/mobile/config/geoapify*.json, project status/decisions/map/app-flow docs.
+- Orchestra developer: apps/mobile/lib/geoapify.dart, pubspec.yaml, pubspec.lock, test/geoapify_test.dart, README.md.
+- Orchestra ui: apps/mobile/lib/place_editor.dart, lib/main.dart, test/place_editor_test.dart, test/registration_flow_test.dart (added for existing integration regression).
+- Orchestra reviewer: read-only review/debug/test. No other writer assigned to these paths. Do not revert others.
+- Authors returned implementation files to root after implementation. Root owns final integration, including test fixture encoding fix.
+- Follow-up ownership: Orchestra developer owns lib/place_editor.dart and test/map_tiles_test.dart for tile lifecycle fixes; ui stopped and handed back. Other files root.
+- State: validating. Local key file created and git-ignored; live API and iPhone tests pending. Paid plan/deployment excluded.
+
+
 ## 지도 등록 교체 검토 (2026-10-12 최신)
 
 - 최신 사용자 승인: 지도 사용 방향을 문서화하고 다음 코드 작성 시 참고하도록 저장. Geoapify를 우선 검증 후보로 기록하되 최종 서비스 채택은 미확정.

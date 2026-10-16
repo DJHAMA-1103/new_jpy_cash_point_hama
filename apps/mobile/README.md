@@ -6,7 +6,7 @@ Flutter 3.32.7 / Dart + Swift, iOS 14+ first. POINT is a working display name; f
 
 - Japanese black/white/yellow Flutter management UI, first-use permission explanation and choice, place/app CRUD, serialized local persistence and corrupt-data protection.
 - Free limits: two places and three unique catalog apps. Reusing an app at multiple places counts once. Place entry can also register selected apps in one save. No purchase or paid-limit bypass.
-- Current-location capture or manual coordinates; real map/search integration is deferred. The location preview is a schematic, not a live map.
+- Geoapify map and explicit store/address search integration is under review. Japan-only Japanese searches return up to five candidates; manual map pin selection covers missing results. Search quality and live iPhone behavior remain unverified.
 - Swift Core Location region monitoring with Always authorization; local arrival notifications; native configuration restored before Flutter starts. No continuous GPS tracking or installed-app enumeration.
 - A notification tap opens POINT, validates the current place/app/revision, then opens the allowlisted target once when active. No fixed splash delay or extra confirmation for a valid target. Ordinary startup never replays an old tap.
 - Invalid/missing links, denied permissions, corrupt storage and platform failures are visible errors. Management UI is shared; web is verified, Android build/runtime is unverified. Native arrival and external-app launching are explicitly unavailable on Android/web.
@@ -29,6 +29,34 @@ Location requests may return before the system permission sheet resolves. Native
 
 Catalog selection is not a guarantee of merchant acceptance. No external URL from notifications or user input is executed.
 
+## Geoapify free-plan setup
+
+From `apps/mobile`, edit the existing ignored `config/geoapify.local.json` locally and set `GEOAPIFY_API_KEY` to your own key. Its shape is:
+
+```json
+{"GEOAPIFY_API_KEY":"YOUR_GEOAPIFY_KEY"}
+```
+
+Do not commit the local file or paste the key into logs. If the file is missing, create it from the JSON shape above; do not overwrite an existing key. The compiled client contains the key: a Dart define is not secret storage. Apply appropriate Geoapify key restrictions for each target (web origin/referrer restrictions do not authenticate a native iPhone client), monitor usage, and rotate exposed keys. Do not enable a paid upgrade for this trial.
+
+```sh
+flutter pub get
+flutter test test/geoapify_test.dart
+flutter analyze
+flutter run -d chrome --dart-define-from-file=config/geoapify.local.json
+# On an approved Mac with an attached, provisioned iPhone:
+flutter devices
+flutter run -d DEVICE_ID --dart-define-from-file=config/geoapify.local.json
+```
+
+Replace `DEVICE_ID` with the attached device ID. The key must be provided again on each run/build; fully restart/rebuild after changing it. Without a key, search and map network requests are unavailable. Tests use injected HTTP clients and do not require a live key.
+
+The search service uses HTTPS `/v1/geocode/search`, `lang=ja`, `filter=countrycode:jp`, `limit=5`, `format=json`, and optional `bias=proximity:longitude,latitude`. Call it only on explicit search submission, not while typing. It times out after 12 seconds, validates coordinates, removes identical name/coordinate rows, and returns sanitized Japanese errors. Empty results remain empty; no synthetic branches are inserted. The service owns and closes its injected HTTP client.
+
+The map uses `https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png` with the API key encoded as a query parameter. Keep clickable Geoapify and OpenStreetMap attribution visible. Tiles and searches consume the free-plan allowance; avoid automatic retries or background refresh. Saved coordinates do not need a monthly API refresh or monthly app reopening/re-registration. Provider search coverage and iOS arrival detection are separate verification concerns.
+
+Official references: [geocoding parameters](https://apidocs.geoapify.com/docs/geocoding/forward-geocoding/), [raster tiles and attribution](https://apidocs.geoapify.com/docs/maps/map-tiles/), [flutter_map 8.2.2](https://pub.dev/packages/flutter_map/versions/8.2.2), [http](https://pub.dev/packages/http), [latlong2](https://pub.dev/packages/latlong2), [url_launcher](https://pub.dev/packages/url_launcher). Direct dependency minimums support the installed Flutter 3.32.7/Dart 3.8; full resolution and native plugin builds still require verification.
+
 ## Windows checks / preview
 
 From this directory:
@@ -37,7 +65,7 @@ From this directory:
 flutter pub get
 flutter analyze
 flutter test
-flutter build web --no-web-resources-cdn
+flutter build web --no-web-resources-cdn --dart-define-from-file=config/geoapify.local.json
 python -m http.server 8791 --bind 127.0.0.1 --directory build/web
 ```
 
@@ -49,8 +77,8 @@ On an already approved Mac/cloud Mac with Xcode, CocoaPods and Flutter:
 
 ```sh
 flutter pub get
-flutter build ios --simulator
-flutter build ios --release --no-codesign
+flutter build ios --simulator --dart-define-from-file=config/geoapify.local.json
+flutter build ios --release --no-codesign --dart-define-from-file=config/geoapify.local.json
 xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -showdestinations
 ```
 

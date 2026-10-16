@@ -1,5 +1,12 @@
 # 지도·장소 검색 검토
 
+> FINAL 2026-10-16: Geoapify web trial accepted by coordinator after specialist fixes, actual search/map/save/reload/coordinate checks,50 tests and independent static reviews. Local API key configured and Git-excluded. Earlier pending-key and pre-fix statements below are historical. iPhone arrival remains unverified. See PROJECT_STATUS latest result.
+
+> 2026-10-16 implementation result: map/search/manual-pin code and local key configuration are ready. Analysis + 47 tests + web build passed; independent static review approved. Real API verification awaits local key entry; iPhone arrival remains unverified. See PROJECT_STATUS.md and apps/mobile/README.md.
+
+> CURRENT 2026-10-16 / D-024: User approved Geoapify free-plan map/search implementation and has created an API key. This supersedes older candidate-only / unimplemented descriptions below. Store-name search falls back to address search and manual pin placement. Preserve local coordinates without monthly renewal. Paid upgrades and deployment are excluded. Implementation and real API/iPhone validation statuses are tracked separately in PROJECT_STATUS.md.
+
+
 2026-10-12. 지도 관련 구현·검토·재개 시 이 문서의 최신 기준을 먼저 읽는다. 전체 대화나 전체 코드를 다시 읽어 사용자가 같은 요구를 반복하게 하지 않는다.
 
 ## 최신 사용 방향 — 다음 구현의 필수 기준

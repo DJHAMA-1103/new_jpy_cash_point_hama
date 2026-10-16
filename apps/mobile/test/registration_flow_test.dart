@@ -6,6 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:point_mobile/main.dart';
 import 'package:point_mobile/native_bridge.dart';
 import 'package:point_mobile/storage.dart';
+import 'package:point_mobile/place_editor.dart';
+import 'place_editor_test.dart' show testMap, chosen, tapText;
 import 'model_storage_test.dart' show MemoryStore;
 
 class PausableNative extends NativeBridge {
@@ -43,14 +45,28 @@ void main() {
       );
       final repo = PointRepository(storage);
       final native = PausableNative();
-      await tester.pumpWidget(PointApp(repository: repo, native: native));
+      await tester.pumpWidget(
+        PointApp(
+          repository: repo,
+          native: native,
+          placeEditorBuilder: (editor) => PlaceEditor(
+            initial: editor.initial,
+            apps: editor.apps,
+            native: editor.native,
+            existingIds: editor.existingIds,
+            apiKey: 'test-only',
+            mapBuilder: testMap,
+            search: (query, {latitude, longitude}) async => [],
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
       await tester.tap(find.byIcon(Icons.add));
       await tester.pumpAndSettle();
-      final fields = find.byType(TextFormField);
-      await tester.enterText(fields.at(0), 'テスト薬局');
-      await tester.enterText(fields.at(1), '35.6812');
-      await tester.enterText(fields.at(2), '139.7671');
+      await tapText(tester, 'テスト地図のピンを選択');
+      await tester.enterText(find.byKey(const Key('place-name')), 'テスト薬局');
+      await tapText(tester, 'この場所で使うアプリを選ぶ');
+      expect(repo.data.places, isEmpty);
       final target = find.widgetWithText(CheckboxListTile, 'Vポイント');
       await tester.scrollUntilVisible(
         target,
@@ -72,6 +88,8 @@ void main() {
       native.refreshGate!.complete();
       await tester.pumpAndSettle();
       expect(repo.data.places.single.appIds, ['v_point']);
+      expect(repo.data.places.single.latitude, chosen.latitude);
+      expect(repo.data.places.single.longitude, chosen.longitude);
       final id = repo.data.places.single.id;
       await tester.scrollUntilVisible(
         find.text('編集'),
@@ -80,7 +98,8 @@ void main() {
       );
       await tester.tap(find.text('編集'));
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextFormField).first, '変更した薬局');
+      await tester.enterText(find.byKey(const Key('place-name')), '変更した薬局');
+      await tapText(tester, 'この場所で使うアプリを選ぶ');
       await tester.scrollUntilVisible(
         find.text('保存'),
         200,

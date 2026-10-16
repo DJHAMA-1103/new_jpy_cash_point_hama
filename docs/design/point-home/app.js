@@ -144,13 +144,29 @@ function beginPlace() {
 }
 
 function placePicker() {
-  showDialog(`${dialogTitle('STEP 01 / PLACE', 'いつもの場所を選ぶ', '検索して選ぶか、地図のサンプルに自分の場所を追加できます。')}
-    <label class="visually-hidden" for="place-search">場所を検索</label><input type="search" id="place-search" placeholder="場所の名前で検索" maxlength="50" autocomplete="off">
+  showDialog(`${dialogTitle('STEP 01 / PLACE', 'いつもの場所を選ぶ', '架空デモを検索し、ピンを確認してアプリを選びます。実際の検索はFlutterアプリで利用します。')}
+    <form id="search-form"><label class="field-label" for="place-search">店舗名・住所（架空デモ）</label><input type="search" id="place-search" placeholder="例：吉祥寺本町" maxlength="50" autocomplete="off"><button class="secondary full-width" type="submit">デモ内を検索</button></form><details><summary>状態表示を確認（デモ）</summary><label class="field-label" for="search-state">検索・地図の状態</label><select id="search-state"><option value="ready">通常</option><option value="missing">設定なし</option><option value="error">通信エラー</option><option value="empty">結果なし</option><option value="denied">位置情報オフ</option><option value="tiles">地図エラー</option><option value="limit">利用制限</option></select></details><p class="dialog-note" id="search-status" role="status"></p>
     <div class="choice-list" id="place-options"></div><button class="text-button full-width" data-action="custom-place">見つからない場所を自分で追加</button><p class="dialog-note">表示されるお店はすべて架空のサンプルです。</p>`);
-  filterPlaces('');
+  $('#place-search').value = draft.query || '';
+  $('#search-state').value = draft.searchState || 'ready';
+  filterPlaces(draft.query || '');
 }
 
 function filterPlaces(query) {
+  draft.query = query;
+  const mode = draft.searchState || 'ready';
+  const messages = {
+    missing: '設定なしの表示例：地図・検索は利用できません。登録済みの場所は名前とアプリを編集できます。',
+    error: '通信エラーの表示例：検索ボタンで再試行するか、地図で指定してください。',
+    empty: '結果なしの表示例：住所で検索し直すか、地図で指定してください。',
+    denied: '位置情報オフの表示例：検索は許可なしで利用できます。到着のお知らせには位置情報の許可が必要です。',
+    tiles: '地図エラーの表示例：地図を再試行してください。位置を確認できない場合は登録を中断できます。',
+    limit: '利用制限の表示例：しばらく待って検索し直してください。'
+  };
+  $('#search-status').textContent = messages[mode] || '架空の候補です。実際のAPI通信・位置情報取得は行いません。';
+  $('[data-action="custom-place"]').disabled = mode === 'missing';
+  if (['missing', 'error', 'empty', 'limit'].includes(mode)) { $('#place-options').innerHTML = ''; return; }
+
   const normalized = query.trim().toLocaleLowerCase('ja');
   const available = PLACES.filter(place => !data().places.some(saved => saved.id === place.id));
   const matches = available.filter(place => `${place.name} ${place.area}`.toLocaleLowerCase('ja').includes(normalized));
@@ -158,18 +174,24 @@ function filterPlaces(query) {
 }
 
 function customPlace() {
-  showDialog(`${dialogTitle('STEP 01 / PLACE', '場所を自分で追加', '場所の名前を入力し、サンプル地図上の位置を確認してください。')}
+  draft.coordinates = draft.coordinates || (draft.place ? { x: draft.place.x, y: draft.place.y } : { x: 50, y: 50 });
+  showDialog(`${dialogTitle('STEP 02 / PIN', '名前とピンの位置を確認', '場所の名前を入力し、サンプル地図上の位置を確認してください。')}
     <form id="custom-place-form"><label class="field-label" for="custom-name">場所の名前</label><input type="text" id="custom-name" maxlength="50" required placeholder="例：いつものスーパー" autocomplete="off">
-    <label class="field-label">登録する位置</label><button type="button" class="mini-map" id="custom-map" aria-label="サンプル地図上の位置を変更">${icon('pin')}<span>タップして位置を変更 · サンプル</span></button>
-    <p class="dialog-note">実際の地図・住所には反映されません。</p><div class="dialog-actions"><button type="button" class="secondary" data-action="back-places">戻る</button><button type="submit" class="primary">アプリを選ぶ</button></div><p class="form-error" id="form-error" role="alert"></p></form>`);
-  draft.coordinates = { x: 50, y: 50 };
+<p class="dialog-note">${escapeHTML(draft.place?.area || "自分で指定する場所 · 架空デモ")}</p><button type="button" class="mini-map" id="custom-map" aria-label="サンプル地図上の位置を変更">${icon('pin')}<span>タップまたはEnterで位置を調整 · デモ</span></button>
+    <p id="pin-status" class="dialog-note" role="status">実際の地図・住所には反映されません。最後に保存するまで登録されません。</p><div class="dialog-actions"><button type="button" class="secondary" data-action="${draft.editing ? 'back-apps' : 'back-places'}">戻る</button><button type="submit" class="primary">アプリを選ぶ</button></div><p class="form-error" id="form-error" role="alert"></p></form>`);
+  $('#custom-name').value = draft.name ?? draft.place?.name ?? '';
+  renderDraftPin();
+}
+
+function renderDraftPin() {
+  $('#custom-map svg').style.transform = `translate(${(draft.coordinates.x - 50) * 2}px, ${draft.coordinates.y - 50}px)`;
 }
 
 function appPicker() {
-  const label = draft.editing ? 'EDIT / CONNECTIONS' : 'STEP 02 / APPS';
+  const label = draft.editing ? 'EDIT / CONNECTIONS' : 'STEP 03 / APPS';
   showDialog(`${dialogTitle(label, draft.editing ? '登録アプリを編集' : '知らせてほしいアプリは？', `<strong>${escapeHTML(draft.place.name)}</strong> に関連付けるアプリを選びます。`)}
     <form id="apps-form"><div class="choice-list">${APPS.map(app => `<label class="choice">${appLogo(app.id)}<span><strong>${app.name}</strong><small>${app.kind}${data().apps.includes(app.id) ? ' · マイアプリ' : ' · マイアプリにも追加'}</small></span><input type="checkbox" name="linked-app" value="${app.id}" ${draft.apps.includes(app.id) ? 'checked' : ''}></label>`).join('')}</div>
-    <p class="dialog-note">あなたが使うアプリの組み合わせです。店舗の対応状況は確認していません。</p><div class="dialog-actions"><button type="button" class="secondary" data-action="${draft.editing ? 'close' : 'back-places'}">${draft.editing ? 'キャンセル' : '戻る'}</button><button type="submit" class="primary">内容を確認</button></div><p class="form-error" id="form-error" role="alert"></p></form>
+    <p class="dialog-note">あなたが使うアプリの組み合わせです。店舗の対応状況は確認していません。</p><div class="dialog-actions"><button type="button" class="secondary" data-action="back-pin">位置を確認</button><button type="submit" class="primary">内容を確認</button></div><p class="form-error" id="form-error" role="alert"></p></form>
     ${draft.editing ? '<button class="text-button delete-link full-width" data-action="delete-place">この場所の登録を削除</button>' : ''}`);
 }
 
@@ -180,6 +202,7 @@ function confirmPlace() {
 }
 
 function savePlace() {
+  if (!draft || !dialog.open) return;
   const next = clone(data());
   const place = { ...draft.place, apps: [...draft.apps] };
   next.apps = [...new Set([...next.apps, ...draft.apps])];
@@ -262,7 +285,13 @@ document.addEventListener('click', event => {
     const pin = [...document.querySelectorAll('[data-pin]')].find(item => item.dataset.pin === selectedPlace);
     pin?.focus({ preventScroll: true });
   } else if (button.dataset.editPlace) editPlace(button.dataset.editPlace);
-  else if (button.dataset.pickPlace) { draft.place = { ...PLACES.find(place => place.id === button.dataset.pickPlace) }; appPicker(); }
+  else if (button.dataset.pickPlace) {
+    if (draft.place?.id !== button.dataset.pickPlace) {
+      draft.place = { ...PLACES.find(place => place.id === button.dataset.pickPlace) };
+      draft.name = null; draft.coordinates = null;
+    }
+    customPlace();
+  }
   else if (button.dataset.appDetail) appDetails(button.dataset.appDetail);
   else if (button.dataset.removeApp) removeApp(button.dataset.removeApp);
   else if (button.dataset.confirmRemoveApp) {
@@ -280,15 +309,20 @@ document.addEventListener('click', event => {
     else toast('サンプルの現在地を表示しています。実際の位置は取得していません。');
   } else if (button.id === 'custom-map') {
     draft.coordinates = draft.coordinates.x === 50 ? { x: 68, y: 65 } : { x: 50, y: 50 };
-    button.querySelector('svg').style.transform = draft.coordinates.x === 50 ? '' : 'translate(45px, 16px)';
-    button.querySelector('span').textContent = '位置を選択しました · サンプル';
+    renderDraftPin();
+    $('#pin-status').textContent = 'ピンを調整しました · 架空デモ。名前と位置を確認してください。';
   } else {
     switch (button.dataset.action) {
       case 'add-place': beginPlace(); break;
       case 'add-app': addApps(); break;
       case 'close': dialog.close(); break;
       case 'back-places': placePicker(); break;
-      case 'custom-place': customPlace(); break;
+      case 'custom-place':
+        if (draft.place && PLACES.some(place => place.id === draft.place.id)) {
+          draft.place = null; draft.name = null; draft.coordinates = null;
+        }
+        customPlace(); break;
+      case 'back-pin': customPlace(); break;
       case 'back-apps': appPicker(); break;
       case 'save-place': savePlace(); break;
       case 'delete-place': deletePlace(); break;
@@ -302,16 +336,23 @@ document.addEventListener('click', event => {
   }
 });
 
-document.addEventListener('input', event => { if (event.target.id === 'place-search') filterPlaces(event.target.value); });
+document.addEventListener('input', event => {
+  if (event.target.id === 'custom-name') draft.name = event.target.value;
+  if (event.target.name === 'linked-app') draft.apps = [...new FormData($('#apps-form')).getAll('linked-app')];
+});
+document.addEventListener('change', event => {
+  if (event.target.id === 'search-state') { draft.searchState = event.target.value; filterPlaces($('#place-search').value); }
+});
 document.addEventListener('submit', event => {
-  if (!['custom-place-form', 'apps-form', 'add-apps-form'].includes(event.target.id)) return;
+  if (!['search-form', 'custom-place-form', 'apps-form', 'add-apps-form'].includes(event.target.id)) return;
   event.preventDefault();
+  if (event.target.id === 'search-form') { filterPlaces($('#place-search').value); return; }
   if (event.target.id === 'custom-place-form') {
     const name = $('#custom-name').value.trim();
     if (!name) { $('#form-error').textContent = '場所の名前を入力してください。'; return; }
-    if (data().places.some(place => place.name === name)) { $('#form-error').textContent = '同じ名前の場所が登録されています。名前を変えるか、登録済みの場所を編集してください。'; return; }
+    if (data().places.some(place => place.name === name && place.id !== draft.place?.id)) { $('#form-error').textContent = '同じ名前の場所が登録されています。名前を変えるか、登録済みの場所を編集してください。'; return; }
     const id = `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-    draft.place = { id, name, area: '自分で追加した場所 · サンプル位置', icon: 'pin', ...draft.coordinates };
+    draft.place = { ...(draft.place || { id, area: '自分で追加した場所 · サンプル位置', icon: 'pin' }), name, ...draft.coordinates };
     appPicker();
   } else if (event.target.id === 'apps-form') {
     const selected = [...new FormData(event.target).getAll('linked-app')];
